@@ -1,5 +1,10 @@
 from flask import Blueprint, render_template
-# from .models import User,Post
+from flask_socketio import SocketIO, emit
+import threading
+import random
+import time
+# from .extensions import socketio
+
 
 main = Blueprint('main', __name__)
 
@@ -21,6 +26,8 @@ def servers():
 
 
 
+
+    
 # @main.route('/')
 # def home():
 #     return "Hello, Factory Pattern!"
