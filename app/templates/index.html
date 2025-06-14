@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block title %}InfraGuard - Infrastructure Monitoring Made Simple{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div class="text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 animate-fade-in">
+                Protect Your
+                <span class="text-blue-200">Infrastructure</span>
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 text-blue-100 max-w-3xl mx-auto">
+                Monitor, secure, and manage your servers with enterprise-grade infrastructure monitoring that's simple to use and powerful to scale.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                {% if not current_user.is_authenticated %}
+                    <a href="{{ url_for('auth.register') }}" class="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                        <i class="fas fa-rocket mr-2"></i>Get Started Free
+                    </a>
+                    <a href="#features" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-blue-600 transition-all duration-300">
+                        <i class="fas fa-play mr-2"></i>Learn More
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('main.dashboard') }}" class="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                        <i class="fas fa-tachometer-alt mr-2"></i>Go to Dashboard
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Why Choose InfraGuard?
+            </h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                Built for modern infrastructure teams who need reliable monitoring without the complexity.
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="text-center p-8 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2">
+                <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-chart-line text-2xl text-white"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">Real-time Monitoring</h3>
+                <p class="text-gray-600">
+                    Get instant insights into your server performance with real-time metrics and alerts that matter.
+                </p>
+            </div>
+
+            <div class="text-center p-8 rounded-xl bg-gradient-to-br from-green-50 to-green-100 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2">
+                <div class="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-shield-alt text-2xl text-white"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">Advanced Security</h3>
+                <p class="text-gray-600">
+                    Protect your infrastructure with automated security scanning and vulnerability detection.
+                </p>
+            </div>
+
+            <div class="text-center p-8 rounded-xl bg-gradient-to-br from-purple-50 to-purple-100 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2">
+                <div class="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-cogs text-2xl text-white"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">Easy Setup</h3>
+                <p class="text-gray-600">
+                    Deploy in minutes, not hours. Our simple setup process gets you monitoring immediately.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-16 bg-gray-900 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-4 gap-8 text-center">
+            <div class="space-y-2">
+                <div class="text-4xl font-bold text-blue-400">99.9%</div>
+                <div class="text-gray-300">Uptime Guarantee</div>
+            </div>
+            <div class="space-y-2">
+                <div class="text-4xl font-bold text-green-400">10K+</div>
+                <div class="text-gray-300">Servers Monitored</div>
+            </div>
+            <div class="space-y-2">
+                <div class="text-4xl font-bold text-yellow-400">24/7</div>
+                <div class="text-gray-300">Support Available</div>
+            </div>
+            <div class="space-y-2">
+                <div class="text-4xl font-bold text-purple-400">5min</div>
+                <div class="text-gray-300">Average Setup Time</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                How It Works
+            </h2>
+            <p class="text-xl text-gray-600">
+                Get started in three simple steps
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-12">
+            <div class="text-center">
+                <div class="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 text-white text-2xl font-bold">
+                    1
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">Connect Your Servers</h3>
+                <p class="text-gray-600">
+                    Add your servers using our simple connection wizard. Support for SSH, SNMP, and API monitoring.
+                </p>
+            </div>
+
+            <div class="text-center">
+                <div class="w-20 h-20 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-6 text-white text-2xl font-bold">
+                    2
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">Configure Monitoring</h3>
+                <p class="text-gray-600">
+                    Set up custom alerts and monitoring rules that match your infrastructure needs and requirements.
+                </p>
+            </div>
+
+            <div class="text-center">
+                <div class="w-20 h-20 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 text-white text-2xl font-bold">
+                    3
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">Monitor & Optimize</h3>
+                <p class="text-gray-600">
+                    Watch your infrastructure in real-time and receive intelligent alerts to prevent issues before they happen.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-20 bg-blue-600 text-white">
+    <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl md:text-4xl font-bold mb-6">
+            Ready to Secure Your Infrastructure?
+        </h2>
+        <p class="text-xl mb-8 text-blue-100">
+            Join thousands of teams who trust InfraGuard to monitor their critical systems.
+        </p>
+        {% if not current_user.is_authenticated %}
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{{ url_for('auth.register') }}" class="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105">
+                    <i class="fas fa-user-plus mr-2"></i>Start Free Trial
+                </a>
+                <a href="{{ url_for('auth.login') }}" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-blue-600 transition-all duration-300">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Sign In
+                </a>
+            </div>
+        {% else %}
+            <a href="{{ url_for('main.dashboard') }}" class="inline-block bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105">
+                <i class="fas fa-tachometer-alt mr-2"></i>Access Dashboard
+            </a>
+        {% endif %}
+    </div>
+</section>
+
+<style>
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fade-in 1s ease-out;
+}
+</style>
+{% endblock %}
