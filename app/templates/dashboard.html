@@ -60,16 +60,36 @@ block content %}
 
     <form id="add-server-form" class="mb-8 bg-white p-6 rounded-lg shadow-md">
       <h3 class="text-lg font-bold mb-4">Add New Server</h3>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <input type="text" id="server-name" placeholder="Server Name" class="p-2 rounded border" required />
-        <input type="text" id="ip-address" placeholder="IP Address" class="p-2 rounded border" required />
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add Server</button>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <input
+          type="text"
+          id="server-name"
+          placeholder="Server Name"
+          class="p-2 rounded-lg border border-gray-300 shadow-sm placeholder-gray-400 hover:border-blue-700 w-full"
+          required
+        />
+        <input
+          type="text"
+          id="ip-address"
+          placeholder="IP Address"
+          class="p-2 rounded-lg border border-gray-300 shadow-sm placeholder-gray-400 hover:border-blue-700 w-full"
+          required
+        />
+        <input
+          type="text"
+          id="server-description"
+          placeholder="Description"
+          class="p-2 rounded-lg border border-gray-300 shadow-sm placeholder-gray-400 hover:border-blue-700 w-full"
+        />
+
+        <button
+          type="submit"
+          class="bg-blue-500 text-white text-sm px-3 py-1.5 rounded-md hover:bg-blue-600 focus:ring-2 focus:ring-blue-200 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-sm w-full"
+        >
+          Add
+        </button>
       </div>
-
-      
-
-      
-
 
       <div id="form-message" class="mt-4 text-sm"></div>
     </form>
@@ -96,6 +116,9 @@ block content %}
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
+    console.log("🚀 JS loaded");
+
+    // fetchServers();
     const socket = io({
       transports: ["polling", "websocket"],
     });
@@ -127,16 +150,17 @@ block content %}
     // Handle Add Server Form
     const form = document.getElementById("add-server-form");
     const formMessage = document.getElementById("form-message");
-
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       const name = document.getElementById("server-name").value;
       const ip_address = document.getElementById("ip-address").value;
+      const description = document.getElementById("server-description").value;
+
 
       fetch("/add_server", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, ip_address }),
+        body: JSON.stringify({ name, ip_address, description }),
       })
         .then((res) => res.json())
         .then((data) => {
@@ -162,15 +186,16 @@ block content %}
         .then((data) => {
           const serverList = document.getElementById("server-list");
           serverList.innerHTML = "";
+          const servers = data.servers.slice(0, 3);
 
-          if (data.servers.length === 0) {
+          if (servers.length === 0) {
             const row = document.createElement("tr");
             row.innerHTML = `
               <td colspan="4" class="text-center py-4 text-gray-500">No servers added yet</td>
             `;
             serverList.appendChild(row);
           } else {
-            data.servers.forEach((server) => {
+            servers.forEach((server) => {
               const row = document.createElement("tr");
               row.className = "border-b";
               row.innerHTML = `
@@ -198,13 +223,27 @@ block content %}
               serverList.appendChild(row);
             });
           }
+
+          const seeMoreUrl = "{{ url_for('main.servers') }}";
+      const moreRow = document.createElement("tr");
+      moreRow.innerHTML = `
+        <td colspan="4" class="py-6 text-center">
+          <a href="${seeMoreUrl}" 
+            class="inline-block bg-blue-500 text-white text-base px-5 py-2 rounded-md hover:bg-blue-600 
+                   focus:ring-2 focus:ring-blue-200 transition-all duration-200 transform 
+                   hover:scale-105 active:scale-95 shadow">
+            See all servers →
+          </a>
+        </td>`;
+      
+      serverList.appendChild(moreRow);
         });
     }
 
     // Initial load
     fetchServers();
     // Refresh every 10 sec
-    setInterval(fetchServers, 5000);
+    setInterval(fetchServers, 30000);
   });
 </script>
 

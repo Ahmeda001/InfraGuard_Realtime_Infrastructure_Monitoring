@@ -18,13 +18,9 @@ class Server(db.Model):
     disk_usage = db.Column(db.Float, default=0)
     status = db.Column(db.String(20), default='umknown')  # 'online', 'offline', 'unknown'
     last_updated = db.Column(db.DateTime, default=datetime.utcnow)
+    description = db.Column(db.Text, nullable=True)  # allow nulls, optional
 
 
-class ServerStatusLog(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    server_id = db.Column(db.Integer, db.ForeignKey('server.id'))
-    status = db.Column(db.String(10), nullable=False)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
 class AuditLog(db.Model):
     id = db.Column(db.Integer, primary_key=True)

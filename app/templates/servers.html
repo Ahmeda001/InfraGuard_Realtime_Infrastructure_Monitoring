@@ -1,0 +1,117 @@
+{% extends "base.html" %} {% block title %}All Servers{% endblock %} {% block
+content %}
+
+<section class="bg-gray-100 py-12">
+  <div class="mx-6 mb-6 text-left ">
+  <a
+  href="{{ url_for('main.dashboard') }}"
+  class="inline-flex items-center px-6 py-2 bg-blue-400 hover:bg-blue-600 text-white text-md font-medium rounded-lg shadow-sm transition"
+>
+  ← Back to Dashboard
+</a>
+</div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">
+      Your Servers
+    </h1>
+
+    <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-blue-600 text-white">
+          <tr>
+            <th class="px-6 py-3 text-left text-sm font-semibold">Name</th>
+            <th class="px-6 py-3 text-left text-sm font-semibold">
+              IP Address
+            </th>
+            <th class="px-6 py-3 text-left text-sm font-semibold">Status</th>
+            <th class="px-6 py-3 text-left text-sm font-semibold">
+              Last Checked
+            </th>
+            <th class="px-6 py-3 text-left text-sm font-semibold">Actions</th>
+          </tr>
+        </thead>
+        <tbody
+          id="server-table-body"
+          class="divide-y divide-gray-200 text-gray-700"
+        >
+          <!-- Rows will be added dynamically -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const socket = io({ transports: ["websocket", "polling"] });
+
+    function formatStatus(status) {
+      let colorClass = "bg-gray-200 text-gray-800";
+      if (status === "online") colorClass = "bg-green-200 text-green-800";
+      else if (status === "offline") colorClass = "bg-red-200 text-red-800";
+      return `<span class="px-3 py-1 rounded-full text-sm font-semibold ${colorClass}">
+        ${status.charAt(0).toUpperCase() + status.slice(1)}
+      </span>`;
+    }
+
+    function renderServers(servers) {
+      const tbody = document.getElementById("server-table-body");
+      tbody.innerHTML = "";
+
+      if (servers.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" class="px-6 py-4 text-center text-gray-500">No servers available.</td>
+          </tr>`;
+        return;
+      }
+
+      servers.forEach((server) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td class="px-6 py-4">${server.name}</td>
+          <td class="px-6 py-4">${server.ip_address}</td>
+          <td class="px-6 py-4">${formatStatus(server.status)}</td>
+          <td class="px-6 py-4">${new Date(
+            server.last_updated
+          ).toLocaleString()}</td>
+          <td class="px-6 py-4">
+        <a href="/servers/${server.id}">
+          <button class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-1 px-3 rounded">
+            View
+          </button>
+        </a>
+      </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function fetchServers() {
+      fetch("/get_servers")
+        .then((res) => res.json())
+        .then((data) => renderServers(data.servers))
+        .catch((err) => console.error("Failed to fetch servers:", err));
+    }
+
+    // Initial fetch
+    fetchServers();
+
+    // Refresh every 5 seconds
+    setInterval(fetchServers, 5000);
+
+    // Listen for real-time updates (optional fallback or enhancement)
+    socket.on("server_update", (data) => {
+      if (data.servers) {
+        renderServers(data.servers);
+      }
+    });
+
+    socket.on("connect", () => console.log("Connected to server updates"));
+    socket.on("disconnect", () =>
+      console.log("Disconnected from server updates")
+    );
+  });
+</script>
+
+{% endblock %}

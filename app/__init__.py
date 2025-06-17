@@ -3,7 +3,6 @@ from .extensions import db, socketio
 from flask_login import LoginManager
 from app.auth import auth as auth_blueprint
 from app.routes import main as main_blueprint
-from app.testroute import test_bp
 from .monitor import set_background_app, start_background_thread
 
 
@@ -29,7 +28,6 @@ def create_app(config_class='config.Config'):
     # Register blueprints
     app.register_blueprint(auth_blueprint)
     app.register_blueprint(main_blueprint)
-    app.register_blueprint(test_bp, url_prefix='/test')
 
     with app.app_context():
         db.create_all()
