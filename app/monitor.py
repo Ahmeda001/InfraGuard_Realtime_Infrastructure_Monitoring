@@ -26,9 +26,6 @@ def set_background_app(app):
     print("✅ Background app set successfully")
 
 
-
-
-
 monitoring_thread_started = False
 
 def monitor_servers_continuous():
@@ -37,7 +34,7 @@ def monitor_servers_continuous():
 
     while True:
         if not _background_app:
-            socketio.sleep(5)
+            socketio.sleep(10)
             continue
 
         with _background_app.app_context():
@@ -49,7 +46,7 @@ def monitor_servers_continuous():
 
             for server in servers:
                 try:
-                    result = ping(server.ip_address, timeout=3)
+                    result = ping(server.ip_address, timeout=1.5)
                     server.status = 'online' if result else 'offline'
                     server.last_updated = datetime.utcnow()
                     if server.status == 'online':
@@ -73,7 +70,21 @@ def monitor_servers_continuous():
             })
 
         print("[Monitor] Server check complete.")
-        socketio.sleep(5)
+        socketio.sleep(10)
+        
+        
+def emit_server_stats():
+    total_monitors = Server.query.count()
+    active_servers = Server.query.filter_by(status='online').count()
+    critical_alerts = Server.query.filter_by(status='offline').count()
+    uptime = round((active_servers / total_monitors) * 100, 2) if total_monitors else 0
+
+    socketio.emit('server_update', {
+        'total_monitors': total_monitors,
+        'active_servers': active_servers,
+        'critical_alerts': critical_alerts,
+        'uptime': uptime
+    })
 
 
 def start_background_thread():

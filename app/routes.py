@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, jsonify
 from app.extensions import db,socketio
 from app.models import Server
 from flask_socketio import emit
-from .monitor import start_background_thread
+from .monitor import start_background_thread, emit_server_stats
 import logging
 
 main = Blueprint('main', __name__)
@@ -54,10 +54,10 @@ def get_servers():
         ]
     })
 
-@main.route('/monitor')
-def start_monitoring():
-    start_background_thread()
-    return jsonify({'success': True})
+# @main.route('/monitor')
+# def start_monitoring():
+#     start_background_thread()
+#     return jsonify({'success': True})
 
 logger = logging.getLogger(__name__)
 @socketio.on('connect')
@@ -79,12 +79,9 @@ def handle_disconnect():
     print("🔌 Client disconnected from SocketIO")
     logger.info("Client disconnected")
     
-@socketio.on('request_update')
-def handle_request_update():
-    """Allow frontend to request immediate update"""
-    print("📡 Client requested immediate update")
-    # The background thread will send updates automatically
-    emit('update_requested', {'status': 'processing'})
+@socketio.on('request_initial_stats')
+def handle_initial_request():
+    emit_server_stats()
     
     
     
