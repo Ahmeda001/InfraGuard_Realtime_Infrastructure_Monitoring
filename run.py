@@ -1,12 +1,9 @@
-from app import create_app
-from app.extensions import db
-from app import socket
-from config import Config
 
-app = create_app(Config)
+from app import create_app, socketio
 
-with app.app_context():
-    db.create_all()
+
+app = create_app()
+
 
 if __name__ == '__main__':
-    socket.socketio.run(app, debug=True)
+    socketio.run(app, debug=True, host='127.0.0.1', port=5000)
